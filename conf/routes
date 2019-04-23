@@ -1,0 +1,51 @@
+
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# An example controller showing a sample home page
+GET     /                           controllers.HomeController.index
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
+
+GET           /products             controllers.ProductController.get_products
+GET           /product/:id          controllers.ProductController.get_product(id: String)
+POST          /product              controllers.ProductController.add_product
+PUT           /product/:id          controllers.ProductController.edit_product(id: String)
+DELETE        /product/:id          controllers.ProductController.delete_product(id: String)
+GET           /find_products        controllers.ProductController.find_products
+
+GET           /categories           controllers.CategoryController.get_categories
+GET           /category/:id         controllers.CategoryController.get_category(id: String)
+POST          /category             controllers.CategoryController.add_category
+PUT           /category/:id         controllers.CategoryController.edit_category(id: String)
+DELETE        /category/:id         controllers.CategoryController.delete_category(id: String)
+
+GET           /orders               controllers.OrderController.get_orders
+GET           /order/:id            controllers.OrderController.get_order(id: String)
+POST          /order                controllers.OrderController.add_order
+PUT           /order/:id            controllers.OrderController.edit_order(id: String)
+DELETE        /order/:id            controllers.OrderController.delete_order(id: String)
+
+GET           /users                controllers.UserController.get_users
+GET           /user/:id             controllers.UserController.get_user(id: String)
+POST          /user                 controllers.UserController.add_user
+PUT           /user/:id             controllers.UserController.edit_user(id: String)
+DELETE        /user/:id             controllers.UserController.delete_user(id: String)
+
+GET           /addresses            controllers.UserController.get_addresses
+GET           /address/:id          controllers.UserController.get_address(id: String)
+POST          /address              controllers.UserController.add_address
+PUT           /address/:id          controllers.UserController.edit_address(id: String)
+DELETE        /address/:id          controllers.UserController.delete_address(id: String)
+
+GET           /login                controllers.UserController.login
+GET           /logout               controllers.UserController.logout
+
+GET           /cart                 controllers.OrderController.cart
+POST          /add_to_cart/:id      controllers.OrderController.add_to_cart(id: String)
+DELETE        /remove_from_cart/:id controllers.OrderController.remove_from_cart(id: String)
+GET           /checkout_cart/       controllers.OrderController.checkout_cart
+POST          /payment/:id          controllers.OrderController.payment(id: String)
+POST          /shipping/:id         controllers.OrderController.shipping(id: String)
