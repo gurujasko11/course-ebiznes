@@ -24,13 +24,13 @@ class CategoryRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(im
   /**
     * Here we define the table. It will have a name of people
     */
-  class CategoryTable(tag: Tag) extends Table[Category](tag, "category") {
+  class CategoryTable(tag: Tag) extends Table[Category](tag, "categories") {
 
     /** The ID column, which is the primary key, and auto incremented */
-    def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
+    def id = column[Long]("category_id", O.PrimaryKey, O.AutoInc)
 
     /** The name column */
-    def name = column[String]("name")
+    def name = column[String]("category_name")
 
     /**
       * This is the tables default "projection".
