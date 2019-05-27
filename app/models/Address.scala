@@ -14,5 +14,5 @@ case class Address(
                   )
 
 object Address {
-  implicit val addressFormat = Json.format[Category]
+  implicit val addressFormat = Json.format[Address]
 }

@@ -1,41 +1,67 @@
 package controllers
+
 import javax.inject._
-import play.api.mvc._
-import models.CategoryRepository
+import models._
+import play.api.data.Form
+import play.api.data.Forms._
 import play.api.libs.json.Json
+import play.api.mvc._
 
-import scala.concurrent.ExecutionContext
-
+import scala.concurrent.{ExecutionContext, Future}
 
 @Singleton
-class CategoryController @Inject()(categoryRepository: CategoryRepository, cc: ControllerComponents)(implicit ec: ExecutionContext) extends AbstractController(cc) {
-
-  def getAll = Action.async {
-    implicit request =>
-      categoryRepository.list().map {
-        category => Ok(Json.toJson(category))
-      }
+class CategoryController @Inject()(categoryRepo: CategoryRepository, cc: MessagesControllerComponents
+                                  )(implicit ec: ExecutionContext)
+  extends MessagesAbstractController(cc) {
+  val categoryForm: Form[CreateCategoryForm] = Form {
+    mapping(
+      "name" -> nonEmptyText
+    )(CreateCategoryForm.apply)(CreateCategoryForm.unapply)
   }
 
-  def getById(id: String) = Action {
-    Ok("")
-  }
-
-  def create = Action {
-    Ok("")
-  }
-
-  def update(id: String) = Action {
-    Ok("")
-  }
-
-  def add_category = Action { Ok("add category") }
-  def get_category(id: String) = Action { Ok("get category") }
   def get_categories = Action.async { implicit request =>
-      categoryRepository.list().map{
-      category => Ok(Json.toJson(category))
+    categoryRepo.list().map { category =>
+      Ok(Json.toJson(category))
     }
   }
-  def delete_category(id: String) = Action { Ok("delete category") }
-  def edit_category(id: String) = Action { Ok("edit category") }
+
+  def get_category_by_id(id : Long) = Action.async { implicit request =>
+    val options = for {
+      maybeCategory <- categoryRepo.findById(id)
+    } yield (maybeCategory)
+
+    options.map { case (opt) =>
+      opt match {
+        case Some(category) => Ok(Json.toJson(category))
+        case None => NotFound
+      }
+    }
+  }
+
+
+  def create() = Action.async(parse.json) { implicit request =>
+    categoryForm.bindFromRequest.fold(
+      errorForm => {
+        Future.successful(BadRequest("failed to create category"))
+      },
+      category => {
+
+        categoryRepo.create(
+          category.name : String
+        ).map { _ =>
+          Ok("succesfully added new category" )
+        }
+      }
+    )
+  }
+
+  def delete(id: Long) = Action{
+    categoryRepo.delete(id)
+    Ok("Successfully removed")
+  }
+  def edit_category(id: Long) = Action{
+    Ok("update category, category id" + id)
+  }
+
 }
+case class CreateCategoryForm(name: String)

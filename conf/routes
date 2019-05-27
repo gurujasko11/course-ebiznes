@@ -13,35 +13,40 @@ GET     /message                    controllers.AsyncController.message
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
 
 GET           /products             controllers.ProductController.get_products
-GET           /product/:id          controllers.ProductController.get_product(id: String)
+GET           /product/:id          controllers.ProductController.get_product(id: Long)
 POST          /product              controllers.ProductController.add_product
-PUT           /product/:id          controllers.ProductController.edit_product(id: String)
-DELETE        /product/:id          controllers.ProductController.delete_product(id: String)
-GET           /find_products        controllers.ProductController.find_products
+PUT           /product/:id          controllers.ProductController.edit_product(id: Long)
+DELETE        /product/:id          controllers.ProductController.delete_product(id: Long)
 
 GET           /categories           controllers.CategoryController.get_categories
-GET           /category/:id         controllers.CategoryController.get_category(id: String)
-POST          /category             controllers.CategoryController.add_category
-PUT           /category/:id         controllers.CategoryController.edit_category(id: String)
-DELETE        /category/:id         controllers.CategoryController.delete_category(id: String)
+GET           /category/:id         controllers.CategoryController.get_category_by_id(id: Long)
+POST          /category             controllers.CategoryController.create
+PUT           /category/:id         controllers.CategoryController.edit_category(id: Long)
+DELETE        /category/:id         controllers.CategoryController.delete(id: Long)
 
 GET           /orders               controllers.OrderController.get_orders
-GET           /order/:id            controllers.OrderController.get_order(id: String)
+GET           /order/:id            controllers.OrderController.get_order(id: Long)
 POST          /order                controllers.OrderController.add_order
-PUT           /order/:id            controllers.OrderController.edit_order(id: String)
-DELETE        /order/:id            controllers.OrderController.delete_order(id: String)
+PUT           /order/:id            controllers.OrderController.edit_order(id: Long)
+DELETE        /order/:id            controllers.OrderController.delete_order(id: Long)
+
+GET           /orders_elements      controllers.OrderElementController.get_order_elements
+GET           /order_element/:id     controllers.OrderElementController.get_order_element(id: Long)
+POST          /order_element         controllers.OrderElementController.add_order_element
+PUT           /order_element/:id     controllers.OrderElementController.edit_order_element(id: Long)
+DELETE        /order_element/:id     controllers.OrderElementController.delete_order_element(id: Long)
 
 GET           /users                controllers.UserController.get_users
-GET           /user/:id             controllers.UserController.get_user(id: String)
+GET           /user/:id             controllers.UserController.get_user(id: Long)
 POST          /user                 controllers.UserController.add_user
-PUT           /user/:id             controllers.UserController.edit_user(id: String)
-DELETE        /user/:id             controllers.UserController.delete_user(id: String)
+PUT           /user/:id             controllers.UserController.edit_user(id: Long)
+DELETE        /user/:id             controllers.UserController.delete_user(id: Long)
 
-GET           /addresses            controllers.UserController.get_addresses
-GET           /address/:id          controllers.UserController.get_address(id: String)
-POST          /address              controllers.UserController.add_address
-PUT           /address/:id          controllers.UserController.edit_address(id: String)
-DELETE        /address/:id          controllers.UserController.delete_address(id: String)
+GET           /addresses            controllers.AddressController.get_addresses
+GET           /address/:id          controllers.AddressController.get_address(id: Long)
+POST          /address              controllers.AddressController.add_address
+PUT           /address/:id          controllers.AddressController.edit_address(id: Long)
+DELETE        /address/:id          controllers.AddressController.delete_address(id: Long)
 
 GET           /login                controllers.UserController.login
 GET           /logout               controllers.UserController.logout

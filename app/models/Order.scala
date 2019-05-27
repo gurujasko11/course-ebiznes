@@ -10,5 +10,5 @@ case class Order(
                   )
 
 object Order {
-  implicit val orderFormat = Json.format[Product]
+  implicit val orderFormat = Json.format[Order]
 }
