@@ -60,11 +60,29 @@ class OrderController @Inject()(orderRepository: OrderRepository, cc: Controller
     }
   }
 
+  def edit_order(id: Long) =
+    Action.async(parse.json) {
+      implicit request =>
+        orderForm.bindFromRequest.fold(
+          _ => {
+            Future.successful(BadRequest("failed to update order."))
+          },
+          order => {
+            orderRepository.update(models.Order(
+              id,
+              order.address_id,
+              order.order_date,
+              order.realisation_date
+            )).map({ _ =>
+              Ok
+            })
+          }
+        )
+    }
+
   def delete_order(id: Long) = Action.async(
     orderRepository.delete(id).map(_ => Ok(""))
   )
-
-  def edit_order(id: Long) = Action { Ok("edit order") }
 
   def cart = Action { Ok("cart") }
   def add_to_cart(id: String) = Action { Ok("add to cart") }

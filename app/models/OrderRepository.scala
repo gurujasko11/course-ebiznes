@@ -41,7 +41,12 @@ class OrderRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impli
     (order.filter(_.order_id === id).delete).map(_ => ())
   }
 
-  def findById(id: Long): Future[Option[Order]] = db.run {
+  def findById(id: Long): Future[scala.Option[Order]] = db.run {
     order.filter(_.order_id === id).result.headOption
   }
+
+  def update(newValue: Order) = db.run{
+    order.insertOrUpdate(newValue)
+  }
+
 }

@@ -9,7 +9,7 @@ case class Address(
                     city: String,
                     street: String,
                     home_number: Int,
-                    apartament_number: Int,
+                    apartament_number: scala.Option[Int],
                     postal_code: String
                   )
 

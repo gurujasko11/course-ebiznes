@@ -22,7 +22,7 @@ class AddressController @Inject()(addressRepository: AddressRepository, cc: Cont
       "city" -> nonEmptyText,
       "street"-> nonEmptyText,
       "home_number"-> number,
-      "apartament_number"-> number,
+      "apartament_number"-> optional(number),
       "postal_code" -> nonEmptyText
     )(CreateAddressForm.apply)(CreateAddressForm.unapply)
   }
@@ -73,7 +73,29 @@ class AddressController @Inject()(addressRepository: AddressRepository, cc: Cont
     addressRepository.delete(id).map(_ => Ok(""))
   )
 
-  def edit_address(id: Long) = Action { Ok("edit user") }
+  def edit_address(id: Long) =
+    Action.async(parse.json) {
+      implicit request =>
+        addressForm.bindFromRequest.fold(
+          _ => {
+            Future.successful(BadRequest("failed to update address."))
+          },
+          address => {
+            addressRepository.update(models.Address(
+              id,
+              address.user_id,
+              address.country,
+              address.city,
+              address.street,
+              address.home_number,
+              address.apartament_number,
+              address.postal_code
+            )).map({ _ =>
+              Ok
+            })
+          }
+        )
+    }
 
 }
-case class CreateAddressForm(user_id: Long, country: String, city: String, street: String, home_number: Int, apartament_number: Int, postal_code: String)
+case class CreateAddressForm(user_id: Long, country: String, city: String, street: String, home_number: Int, apartament_number: Option[Int], postal_code: String)

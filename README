@@ -1,2 +1,4 @@
 systemctl stop mysql.service
 //it stops mysql
+sudo docker-compose up
+//starts db

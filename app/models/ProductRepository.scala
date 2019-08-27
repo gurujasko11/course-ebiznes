@@ -43,7 +43,7 @@ class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
     (product.filter(_.product_id === id).delete).map(_ => ())
   }
 
-  def findById(id: Long): Future[Option[Product]] = db.run {
+  def findById(id: Long): Future[scala.Option[Product]] = db.run {
     product.filter(_.product_id === id).result.headOption
   }
 }

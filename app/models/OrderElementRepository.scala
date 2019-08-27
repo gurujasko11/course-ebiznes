@@ -42,7 +42,7 @@ class OrderElementRepository @Inject() (dbConfigProvider: DatabaseConfigProvider
     (orderElement.filter(_.order_element_id === id).delete).map(_ => ())
   }
 
-  def findById(id: Long): Future[Option[OrderElement]] = db.run {
+  def findById(id: Long): Future[scala.Option[OrderElement]] = db.run {
     orderElement.filter(_.order_element_id === id).result.headOption
   }
 }

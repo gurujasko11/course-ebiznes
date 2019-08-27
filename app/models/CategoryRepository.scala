@@ -36,7 +36,12 @@ class CategoryRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(im
     (category.filter(_.category_id === id).delete).map(_ => ())
 }
 
-  def findById(id: Long): Future[Option[Category]] = db.run{
+  def findById(id: Long): Future[scala.Option[Category]] = db.run{
     category.filter(_.category_id === id).result.headOption
   }
+
+  def update(newValue: Category) = db.run{
+    category.insertOrUpdate(newValue)
+  }
+
 }

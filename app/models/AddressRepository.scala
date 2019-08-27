@@ -20,7 +20,7 @@ class AddressRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
     def city = column[String]("city")
     def street = column[String]("street")
     def home_number = column[Int]("home_number")
-    def apartament_number = column[Int]("apartament_number")
+    def apartament_number = column[scala.Option[Int]]("apartament_number")
     def postal_code = column[String]("postal_code")
 
     def * = (address_id, user_id, country, city, street, home_number, apartament_number, postal_code) <> ((Address.apply _).tupled, Address.unapply)
@@ -28,7 +28,7 @@ class AddressRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
 
   val address = TableQuery[AddressTable]
 
-  def create(user_id: Long, country: String, city: String, street: String, home_number: Int, apartament_number: Int, postal_code: String): Future[Address] = db.run {
+  def create(user_id: Long, country: String, city: String, street: String, home_number: Int, apartament_number: scala.Option[Int], postal_code: String): Future[Address] = db.run {
     (address.map(a => (a.user_id, a.country, a.city, a.street, a.home_number, a.apartament_number, a.postal_code))
       returning address.map(_.address_id)
       into {case((user_id, country, city, street, home_number, apartament_number, postal_code), address_id) =>
@@ -44,7 +44,11 @@ class AddressRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
     (address.filter(_.address_id === id).delete).map(_ => ())
   }
 
-  def findById(id: Long): Future[Option[Address]] = db.run {
+  def findById(id: Long): Future[scala.Option[Address]] = db.run {
     address.filter(_.address_id === id).result.headOption
+  }
+
+  def update(newValue: Address) = db.run{
+    address.insertOrUpdate(newValue)
   }
 }
