@@ -3,31 +3,31 @@ package controllers
 import javax.inject._
 import models.AddressRepository
 import play.api.data.Form
-import play.api.data.Forms.{mapping, _}
+import play.api.data.Forms.{ mapping, _ }
 import play.api.libs.json.Json
 import play.api.mvc._
 import play.api.data.format.Formats._
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 /**
-  */
+ */
 @Singleton
-class AddressController @Inject()(addressRepository: AddressRepository, cc: ControllerComponents)(implicit ec: ExecutionContext) extends AbstractController(cc) {
+class AddressController @Inject() (addressRepository: AddressRepository, cc: ControllerComponents)(implicit ec: ExecutionContext) extends AbstractController(cc) {
 
   val addressForm: Form[CreateAddressForm] = Form {
     mapping(
       "user_id" -> of(longFormat),
       "country" -> nonEmptyText,
       "city" -> nonEmptyText,
-      "street"-> nonEmptyText,
-      "home_number"-> number,
-      "apartament_number"-> optional(number),
+      "street" -> nonEmptyText,
+      "home_number" -> number,
+      "apartament_number" -> optional(number),
       "postal_code" -> nonEmptyText
     )(CreateAddressForm.apply)(CreateAddressForm.unapply)
   }
 
-  def add_address  = Action.async { implicit request =>
+  def add_address = Action.async { implicit request =>
     addressForm.bindFromRequest.fold(
       errorForm => {
         Future.successful(BadRequest("failed to create address."))
@@ -42,8 +42,8 @@ class AddressController @Inject()(addressRepository: AddressRepository, cc: Cont
           address.apartament_number,
           address.postal_code
         ).map { address =>
-          Created(Json.toJson(address))
-        }
+            Created(Json.toJson(address))
+          }
       }
     )
   }
@@ -53,17 +53,18 @@ class AddressController @Inject()(addressRepository: AddressRepository, cc: Cont
       maybeAddress <- addressRepository.findById(id)
     } yield (maybeAddress)
 
-    options.map { case (opt) =>
-      opt match {
-        case Some(address) => Ok(Json.toJson(address))
-        case None => NotFound
-      }
+    options.map {
+      case (opt) =>
+        opt match {
+          case Some(address) => Ok(Json.toJson(address))
+          case None => NotFound
+        }
     }
   }
 
   def get_addresses = {
     Action.async { implicit request =>
-      addressRepository.list().map{
+      addressRepository.list().map {
         address => Ok(Json.toJson(address))
       }
     }

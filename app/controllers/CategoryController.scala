@@ -7,11 +7,10 @@ import play.api.data.Forms._
 import play.api.libs.json.Json
 import play.api.mvc._
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 @Singleton
-class CategoryController @Inject()(categoryRepo: CategoryRepository, cc: MessagesControllerComponents
-                                  )(implicit ec: ExecutionContext)
+class CategoryController @Inject() (categoryRepo: CategoryRepository, cc: MessagesControllerComponents)(implicit ec: ExecutionContext)
   extends MessagesAbstractController(cc) {
   val categoryForm: Form[CreateCategoryForm] = Form {
     mapping(
@@ -25,19 +24,19 @@ class CategoryController @Inject()(categoryRepo: CategoryRepository, cc: Message
     }
   }
 
-  def get_category_by_id(id : Long) = Action.async { implicit request =>
+  def get_category_by_id(id: Long) = Action.async { implicit request =>
     val options = for {
       maybeCategory <- categoryRepo.findById(id)
     } yield (maybeCategory)
 
-    options.map { case (opt) =>
-      opt match {
-        case Some(category) => Ok(Json.toJson(category))
-        case None => NotFound
-      }
+    options.map {
+      case (opt) =>
+        opt match {
+          case Some(category) => Ok(Json.toJson(category))
+          case None => NotFound
+        }
     }
   }
-
 
   def create() = Action.async(parse.json) { implicit request =>
     categoryForm.bindFromRequest.fold(
@@ -47,15 +46,15 @@ class CategoryController @Inject()(categoryRepo: CategoryRepository, cc: Message
       category => {
 
         categoryRepo.create(
-          category.name : String
+          category.name: String
         ).map { _ =>
-          Ok("succesfully added new category" )
-        }
+            Ok("succesfully added new category")
+          }
       }
     )
   }
 
-  def delete(id: Long) = Action{
+  def delete(id: Long) = Action {
     categoryRepo.delete(id)
     Ok("Successfully removed")
   }

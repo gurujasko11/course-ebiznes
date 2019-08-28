@@ -2,15 +2,51 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-# An example controller showing a sample home page
-GET           /                            controllers.ProductController.get_products
-# An example controller showing how to use dependency injection
-GET           /count                       controllers.CountController.count
-# An example controller showing how to write asynchronous code
-GET           /message                     controllers.AsyncController.message
+# Home page
+GET         /                                controllers.ApplicationController.index
+GET         /signOut                         controllers.ApplicationController.signOut
+GET         /authenticate/:provider          controllers.SocialAuthController.authenticate(provider)
+
+GET         /signUp                          controllers.SignUpController.view
+POST        /signUp                          controllers.SignUpController.submit
+
+GET         /signIn                          controllers.SignInController.view
+POST        /signIn                          controllers.SignInController.submit
+
+GET         /totp                            controllers.TotpController.view
+GET         /enableTotp                      controllers.TotpController.enableTotp
+GET         /disableTotp                     controllers.TotpController.disableTotp
+POST        /totpSubmit                      controllers.TotpController.submit
+POST        /enableTotpSubmit                controllers.TotpController.enableTotpSubmit
+
+GET         /totpRecovery                    controllers.TotpRecoveryController.view(userID: java.util.UUID, sharedKey: String, rememberMe: Boolean)
+POST        /totpRecoverySubmit              controllers.TotpRecoveryController.submit
+
+GET         /password/forgot                 controllers.ForgotPasswordController.view
+POST        /password/forgot                 controllers.ForgotPasswordController.submit
+GET         /password/reset/:token           controllers.ResetPasswordController.view(token: java.util.UUID)
+POST        /password/reset/:token           controllers.ResetPasswordController.submit(token: java.util.UUID)
+GET         /password/change                 controllers.ChangePasswordController.view
+POST        /password/change                 controllers.ChangePasswordController.submit
+
+GET         /account/email/:email            controllers.ActivateAccountController.send(email: String)
+GET         /account/activate/:token         controllers.ActivateAccountController.activate(token: java.util.UUID)
 
 # Map static resources from the /public folder to the /assets URL path
-GET           /assets/*file                controllers.Assets.versioned(path="/public", file: Asset)
+GET         /assets/*file                    controllers.Assets.versioned(file)
+->          /webjars                         webjars.Routes
+
+GET           /addresses                   controllers.AddressController.get_addresses
+GET           /address/:id                 controllers.AddressController.get_address(id: Long)
+POST          /address                     controllers.AddressController.add_address
+PUT           /address/:id                 controllers.AddressController.edit_address(id: Long)
+DELETE        /address/:id                 controllers.AddressController.delete_address(id: Long)
+
+GET           /users                       controllers.MyUserController.get_users
+GET           /user/:id                    controllers.MyUserController.get_user(id: Long)
+POST          /user                        controllers.MyUserController.add_user
+PUT           /user/:id                    controllers.MyUserController.edit_user(id: Long)
+DELETE        /user/:id                    controllers.MyUserController.delete_user(id: Long)
 
 GET           /products                    controllers.ProductController.get_products
 GET           /product/:id                 controllers.ProductController.get_product(id: Long)
@@ -35,28 +71,3 @@ GET           /order_element/:id           controllers.OrderElementController.ge
 POST          /order_element               controllers.OrderElementController.add_order_element
 PUT           /order_element/:id           controllers.OrderElementController.edit_order_element(id: Long)
 DELETE        /order_element/:id           controllers.OrderElementController.delete_order_element(id: Long)
-
-GET           /users                       controllers.UserController.get_users
-GET           /user/:id                    controllers.UserController.get_user(id: Long)
-POST          /user                        controllers.UserController.add_user
-PUT           /user/:id                    controllers.UserController.edit_user(id: Long)
-DELETE        /user/:id                    controllers.UserController.delete_user(id: Long)
-
-GET           /addresses                   controllers.AddressController.get_addresses
-GET           /address/:id                 controllers.AddressController.get_address(id: Long)
-POST          /address                     controllers.AddressController.add_address
-PUT           /address/:id                 controllers.AddressController.edit_address(id: Long)
-DELETE        /address/:id                 controllers.AddressController.delete_address(id: Long)
-
-GET           /login                       controllers.UserController.login
-GET           /logout                      controllers.UserController.logout
-
-GET           /cart                        controllers.OrderController.cart
-POST          /add_to_cart/:id             controllers.OrderController.add_to_cart(id: String)
-DELETE        /remove_from_cart/:id        controllers.OrderController.remove_from_cart(id: String)
-GET           /checkout_cart/              controllers.OrderController.checkout_cart
-POST          /payment/:id                 controllers.OrderController.payment(id: String)
-POST          /shipping/:id                controllers.OrderController.shipping(id: String)
-
-
-#GET           /auth                        controllers.UserController.auth_request(code: Option[String])

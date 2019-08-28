@@ -3,24 +3,24 @@ package controllers
 import javax.inject._
 import models.OrderElementRepository
 import play.api.data.Form
-import play.api.data.Forms.{mapping, _}
+import play.api.data.Forms.{ mapping, _ }
 import play.api.libs.json.Json
 import play.api.mvc._
 import play.api.data.format.Formats._
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 /**
-  */
+ */
 @Singleton
-class OrderElementController @Inject()(orderElementRepository: OrderElementRepository, cc: ControllerComponents)(implicit ec: ExecutionContext) extends AbstractController(cc) {
+class OrderElementController @Inject() (orderElementRepository: OrderElementRepository, cc: ControllerComponents)(implicit ec: ExecutionContext) extends AbstractController(cc) {
 
   val orderElementForm: Form[CreateOrderElementForm] = Form {
     mapping(
       "order_id" -> of(longFormat),
       "product_id" -> of(longFormat),
       "quantity" -> number,
-      "price"-> of(doubleFormat)
+      "price" -> of(doubleFormat)
     )(CreateOrderElementForm.apply)(CreateOrderElementForm.unapply)
   }
   def add_order_element = Action.async { implicit request =>
@@ -35,8 +35,8 @@ class OrderElementController @Inject()(orderElementRepository: OrderElementRepos
           order_element.quantity,
           order_element.price
         ).map { order_element =>
-          Created(Json.toJson(order_element))
-        }
+            Created(Json.toJson(order_element))
+          }
       }
     )
   }
@@ -45,17 +45,18 @@ class OrderElementController @Inject()(orderElementRepository: OrderElementRepos
       maybeOrderElement <- orderElementRepository.findById(id)
     } yield (maybeOrderElement)
 
-    options.map { case (opt) =>
-      opt match {
-        case Some(orderElement) => Ok(Json.toJson(orderElement))
-        case None => NotFound
-      }
+    options.map {
+      case (opt) =>
+        opt match {
+          case Some(orderElement) => Ok(Json.toJson(orderElement))
+          case None => NotFound
+        }
     }
   }
 
   def get_order_elements = {
     Action.async { implicit request =>
-      orderElementRepository.list().map{
+      orderElementRepository.list().map {
         orderElement => Ok(Json.toJson(orderElement))
       }
     }

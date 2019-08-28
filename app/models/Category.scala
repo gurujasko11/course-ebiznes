@@ -1,15 +1,15 @@
 package models
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.libs.json._
 import slick.jdbc.JdbcProfile
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 case class Category(
-                     category_id: Long,
-                     name: String)
+  category_id: Long,
+  name: String)
 
 object Category {
   implicit val categoryFormat = Json.format[Category]
@@ -33,23 +33,23 @@ class CategoryRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(im
   def create(name: String): Future[Category] = db.run {
     (category.map(c => (c.name))
       returning category.map(_.category_id)
-      into {case ((name), category_id) => Category(category_id, name)}
-      ) += (name)
+      into { case ((name), category_id) => Category(category_id, name) }
+    ) += ((name))
   }
 
   def list(): Future[Seq[Category]] = db.run {
     category.result
   }
 
-  def delete(id: Long): Future[Unit] = db.run{
+  def delete(id: Long): Future[Unit] = db.run {
     (category.filter(_.category_id === id).delete).map(_ => ())
   }
 
-  def findById(id: Long): Future[scala.Option[Category]] = db.run{
+  def findById(id: Long): Future[scala.Option[Category]] = db.run {
     category.filter(_.category_id === id).result.headOption
   }
 
-  def update(newValue: Category) = db.run{
+  def update(newValue: Category) = db.run {
     category.insertOrUpdate(newValue)
   }
 

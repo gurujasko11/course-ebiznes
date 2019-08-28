@@ -1,19 +1,19 @@
 package models
 
-import javax.inject.{Inject, Singleton}
+import javax.inject.{ Inject, Singleton }
 import play.api.db.slick.DatabaseConfigProvider
 import play.api.libs.json._
 import slick.jdbc.JdbcProfile
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ ExecutionContext, Future }
 
 case class OrderElement(
-                    order_element_id: Long,
-                    order_id: Long,
-                    product_id: Long,
-                    quantity: Int,
-                    price: Double
-                  )
+  order_element_id: Long,
+  order_id: Long,
+  product_id: Long,
+  quantity: Int,
+  price: Double
+)
 
 object OrderElement {
   implicit val orderElementFormat = Json.format[OrderElement]
@@ -42,9 +42,11 @@ class OrderElementRepository @Inject() (dbConfigProvider: DatabaseConfigProvider
   def create(order_id: Long, product_id: Long, quantity: Int, price: Double): Future[OrderElement] = db.run {
     (orderElement.map(o => (o.order_id, o.product_id, o.quantity, o.price))
       returning orderElement.map(_.order_element_id)
-      into {case ((order_id, product_id, quantity, price), order_element_id) =>
-      OrderElement(order_element_id, order_id, product_id, quantity, price)}
-      ) += (order_id, product_id, quantity, price)
+      into {
+        case ((order_id, product_id, quantity, price), order_element_id) =>
+          OrderElement(order_element_id, order_id, product_id, quantity, price)
+      }
+    ) += ((order_id, product_id, quantity, price))
 
   }
 
