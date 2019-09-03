@@ -39,8 +39,8 @@ class MyUserController @Inject() (userRepository: MyUserRepository, cc: Controll
       user => {
         userRepository.create(
           user.login,
-          user.email,
           user.password,
+          user.email,
           user.phone
         ).map { user =>
             Created(Json.toJson(user))
