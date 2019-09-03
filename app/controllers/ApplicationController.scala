@@ -1,16 +1,15 @@
 package controllers
 
-import com.mohiva.play.silhouette.api.actions.SecuredRequest
-import com.mohiva.play.silhouette.api.repositories.AuthInfoRepository
-import com.mohiva.play.silhouette.api.{ LogoutEvent, Silhouette }
-import com.mohiva.play.silhouette.impl.providers.GoogleTotpInfo
 import javax.inject.Inject
+import com.mohiva.play.silhouette.api.actions.SecuredRequest
+import com.mohiva.play.silhouette.api.{ LogoutEvent, Silhouette }
 import org.webjars.play.WebJarsUtil
 import play.api.i18n.I18nSupport
+import play.api.libs.json.Json
 import play.api.mvc.{ AbstractController, AnyContent, ControllerComponents }
 import utils.auth.DefaultEnv
 
-import scala.concurrent.ExecutionContext
+import scala.concurrent.Future
 
 /**
  * The basic application controller.
@@ -22,13 +21,11 @@ import scala.concurrent.ExecutionContext
  */
 class ApplicationController @Inject() (
   components: ControllerComponents,
-  silhouette: Silhouette[DefaultEnv],
-  authInfoRepository: AuthInfoRepository
+  silhouette: Silhouette[DefaultEnv]
 )(
   implicit
   webJarsUtil: WebJarsUtil,
-  assets: AssetsFinder,
-  ex: ExecutionContext
+  assets: AssetsFinder
 ) extends AbstractController(components) with I18nSupport {
 
   /**
@@ -37,19 +34,23 @@ class ApplicationController @Inject() (
    * @return The result to display.
    */
   def index = silhouette.SecuredAction.async { implicit request: SecuredRequest[DefaultEnv, AnyContent] =>
-    authInfoRepository.find[GoogleTotpInfo](request.identity.loginInfo).map { totpInfoOpt =>
-      Ok(views.html.home(request.identity, totpInfoOpt))
-    }
+    Future.successful(Ok(views.html.home(request.identity)))
   }
 
   /**
    * Handles the Sign Out action.
-   *
+   * silhou
    * @return The result to display.
    */
   def signOut = silhouette.SecuredAction.async { implicit request: SecuredRequest[DefaultEnv, AnyContent] =>
-    val result = Redirect(routes.ApplicationController.index())
+    //val result = Redirect(routes.ApplicationController.index())
+    val result = Redirect("http://localhost:3000")
     silhouette.env.eventBus.publish(LogoutEvent(request.identity, request))
     silhouette.env.authenticatorService.discard(request.authenticator, result)
   }
+
+  def isLogged = silhouette.SecuredAction.async { implicit request: SecuredRequest[DefaultEnv, AnyContent] =>
+    Future.successful(Ok("{ \"status\": \"loggedIn\" }"))
+  }
+
 }

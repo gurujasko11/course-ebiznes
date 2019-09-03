@@ -4,7 +4,7 @@
 		module="course-ebiznes-build"
 		revision="0.1.0-SNAPSHOT"
 		status="integration"
-		publication="20190828205336"
+		publication="20190903093641"
 		e:sbtVersion="1.0" e:scalaVersion="2.12"
 	>
 		<description>
