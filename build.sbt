@@ -1,6 +1,6 @@
 import com.typesafe.sbt.SbtScalariform._
-
 import scalariform.formatter.preferences._
+
 
 name := "play-silhouette-seed"
 
@@ -12,15 +12,16 @@ resolvers += Resolver.jcenterRepo
 
 resolvers += "Sonatype snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/"
 
+//z poprzedniego
 resolvers += "scalaz-bintray" at "https://dl.bintray.com/scalaz/releases"
 resolvers += "Akka Snapshot Repository" at "http://repo.akka.io/snapshots/"
+//
 
 libraryDependencies ++= Seq(
-  "com.mohiva" %% "play-silhouette" % "6.1.0",
-  "com.mohiva" %% "play-silhouette-password-bcrypt" % "6.1.0",
-  "com.mohiva" %% "play-silhouette-persistence" % "6.1.0",
-  "com.mohiva" %% "play-silhouette-crypto-jca" % "6.1.0",
-  "com.mohiva" %% "play-silhouette-totp" % "6.1.0",
+  "com.mohiva" %% "play-silhouette" % "6.0.0-SNAPSHOT",
+  "com.mohiva" %% "play-silhouette-password-bcrypt" % "6.0.0-SNAPSHOT",
+  "com.mohiva" %% "play-silhouette-persistence" % "6.0.0-SNAPSHOT",
+  "com.mohiva" %% "play-silhouette-crypto-jca" % "6.0.0-SNAPSHOT",
   "org.webjars" %% "webjars-play" % "2.7.0",
   "org.webjars" % "bootstrap" % "3.3.7-1" exclude("org.webjars", "jquery"),
   "org.webjars" % "jquery" % "3.2.1",
@@ -29,13 +30,19 @@ libraryDependencies ++= Seq(
   "com.typesafe.play" %% "play-mailer" % "7.0.0",
   "com.typesafe.play" %% "play-mailer-guice" % "7.0.0",
   "com.enragedginger" %% "akka-quartz-scheduler" % "1.6.1-akka-2.5.x",
-  "com.adrianhurt" %% "play-bootstrap" % "1.5-P27-B3-SNAPSHOT",
-  "com.mohiva" %% "play-silhouette-testkit" % "6.1.0" % "test",
+  "com.adrianhurt" %% "play-bootstrap" % "1.4-P26-B3-SNAPSHOT",
+  "com.mohiva" %% "play-silhouette-testkit" % "6.0.0-SNAPSHOT" % "test",
   specs2 % Test,
   ehcache,
   guice,
   filters
 )
+
+//z poprzedniego
+libraryDependencies ++= Seq( ehcache , ws , specs2 % Test , guice , "mysql" % "mysql-connector-java" % "5.1.44" )
+libraryDependencies += "com.typesafe.play" %% "play-slick" % "3.0.3"
+libraryDependencies += "com.typesafe.play" %% "play-slick-evolutions" % "3.0.3"
+//
 
 lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
@@ -61,10 +68,6 @@ scalacOptions ++= Seq(
   "-Xlint:-unused,_"
 )
 
-libraryDependencies ++= Seq( ehcache , ws , specs2 % Test , guice , "mysql" % "mysql-connector-java" % "5.1.44" )
-libraryDependencies += "com.typesafe.play" %% "play-slick" % "3.0.3"
-libraryDependencies += "com.typesafe.play" %% "play-slick-evolutions" % "3.0.3"
-
 //********************************************************
 // Scalariform settings
 //********************************************************
@@ -75,3 +78,6 @@ ScalariformKeys.preferences := ScalariformKeys.preferences.value
   .setPreference(FormatXml, false)
   .setPreference(DoubleIndentConstructorArguments, false)
   .setPreference(DanglingCloseParenthesis, Preserve)
+
+//z poprzedniego
+//unmanagedResourceDirectories in Test <+=  baseDirectory ( _ /"target/web/public/test" )

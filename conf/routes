@@ -13,15 +13,6 @@ POST        /signUp                          controllers.SignUpController.submit
 GET         /signIn                          controllers.SignInController.view
 POST        /signIn                          controllers.SignInController.submit
 
-GET         /totp                            controllers.TotpController.view
-GET         /enableTotp                      controllers.TotpController.enableTotp
-GET         /disableTotp                     controllers.TotpController.disableTotp
-POST        /totpSubmit                      controllers.TotpController.submit
-POST        /enableTotpSubmit                controllers.TotpController.enableTotpSubmit
-
-GET         /totpRecovery                    controllers.TotpRecoveryController.view(userID: java.util.UUID, sharedKey: String, rememberMe: Boolean)
-POST        /totpRecoverySubmit              controllers.TotpRecoveryController.submit
-
 GET         /password/forgot                 controllers.ForgotPasswordController.view
 POST        /password/forgot                 controllers.ForgotPasswordController.submit
 GET         /password/reset/:token           controllers.ResetPasswordController.view(token: java.util.UUID)
@@ -66,8 +57,10 @@ POST          /order                       controllers.OrderController.add_order
 PUT           /order/:id                   controllers.OrderController.edit_order(id: Long)
 DELETE        /order/:id                   controllers.OrderController.delete_order(id: Long)
 
-GET           /orders_elements             controllers.OrderElementController.get_order_elements
+GET           /order_elements              controllers.OrderElementController.get_order_elements
 GET           /order_element/:id           controllers.OrderElementController.get_order_element(id: Long)
 POST          /order_element               controllers.OrderElementController.add_order_element
 PUT           /order_element/:id           controllers.OrderElementController.edit_order_element(id: Long)
 DELETE        /order_element/:id           controllers.OrderElementController.delete_order_element(id: Long)
+
+GET           /isLogged                    controllers.ApplicationController.isLogged
