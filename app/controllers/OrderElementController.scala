@@ -17,8 +17,8 @@ class OrderElementController @Inject() (orderElementRepository: OrderElementRepo
 
   val orderElementForm: Form[CreateOrderElementForm] = Form {
     mapping(
-      "order_id" -> of(longFormat),
-      "product_id" -> of(longFormat),
+      "order_id" -> number,
+      "product_id" -> number,
       "quantity" -> number,
       "price" -> of(doubleFormat)
     )(CreateOrderElementForm.apply)(CreateOrderElementForm.unapply)
@@ -40,7 +40,7 @@ class OrderElementController @Inject() (orderElementRepository: OrderElementRepo
       }
     )
   }
-  def get_order_element(id: Long) = Action.async { implicit request =>
+  def get_order_element(id: Int) = Action.async { implicit request =>
     val options = for {
       maybeOrderElement <- orderElementRepository.findById(id)
     } yield (maybeOrderElement)
@@ -62,11 +62,11 @@ class OrderElementController @Inject() (orderElementRepository: OrderElementRepo
     }
   }
 
-  def delete_order_element(id: Long) = Action.async(
+  def delete_order_element(id: Int) = Action.async(
     orderElementRepository.delete(id).map(_ => Ok(""))
   )
 
-  def edit_order_element(id: Long) = Action { Ok("edit user") }
+  def edit_order_element(id: Int) = Action { Ok("edit user") }
 
 }
-case class CreateOrderElementForm(order_id: Long, product_id: Long, quantity: Int, price: Double)
+case class CreateOrderElementForm(order_id: Int, product_id: Int, quantity: Int, price: Double)

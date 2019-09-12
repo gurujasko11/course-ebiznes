@@ -8,8 +8,8 @@ import slick.jdbc.JdbcProfile
 import scala.concurrent.{ ExecutionContext, Future }
 
 case class Order(
-  order_id: Long,
-  address_id: Long,
+  order_id: Int,
+  address_id: Int,
   order_date: String,
   realisation_date: String
 )
@@ -27,8 +27,8 @@ class OrderRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impli
   import profile.api._
 
   class OrderTable(tag: Tag) extends Table[Order](tag, "orders") {
-    def order_id = column[Long]("order_id", O.PrimaryKey, O.AutoInc)
-    def address_id = column[Long]("address_id")
+    def order_id = column[Int]("order_id", O.PrimaryKey, O.AutoInc)
+    def address_id = column[Int]("address_id")
     def order_date = column[String]("order_date")
     def realisation_date = column[String]("realisation_date")
 
@@ -37,7 +37,7 @@ class OrderRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impli
 
   val order = TableQuery[OrderTable]
 
-  def create(address_id: Long, order_date: String, realisation_date: String): Future[Order] = db.run {
+  def create(address_id: Int, order_date: String, realisation_date: String): Future[Order] = db.run {
     (order.map(o => (o.address_id, o.order_date, o.realisation_date))
       returning order.map(_.order_id)
       into {
@@ -51,11 +51,11 @@ class OrderRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impli
     order.result
   }
 
-  def delete(id: Long): Future[Unit] = db.run {
+  def delete(id: Int): Future[Unit] = db.run {
     (order.filter(_.order_id === id).delete).map(_ => ())
   }
 
-  def findById(id: Long): Future[scala.Option[Order]] = db.run {
+  def findById(id: Int): Future[scala.Option[Order]] = db.run {
     order.filter(_.order_id === id).result.headOption
   }
 

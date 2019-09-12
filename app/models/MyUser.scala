@@ -8,7 +8,7 @@ import slick.jdbc.JdbcProfile
 import scala.concurrent.{ ExecutionContext, Future }
 
 case class MyUser(
-  user_id: Long,
+  user_id: Int,
   login: String,
   password: String,
   email: String,
@@ -28,7 +28,7 @@ class MyUserRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impl
   import profile.api._
 
   class MyUserTable(tag: Tag) extends Table[MyUser](tag, "users") {
-    def user_id = column[Long]("user_id", O.PrimaryKey, O.AutoInc)
+    def user_id = column[Int]("user_id", O.PrimaryKey, O.AutoInc)
     def login = column[String]("login")
     def password = column[String]("password")
     def email = column[String]("email")
@@ -53,11 +53,24 @@ class MyUserRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(impl
     user.result
   }
 
-  def delete(id: Long): Future[Unit] = db.run {
+  def delete(id: Int): Future[Unit] = db.run {
     (user.filter(_.user_id === id).delete).map(_ => ())
   }
 
-  def findById(id: Long): Future[scala.Option[MyUser]] = db.run {
+  def findById(id: Int): Future[scala.Option[MyUser]] = db.run {
     user.filter(_.user_id === id).result.headOption
   }
+
+  def isEmailExist(user_email: String): Future[Boolean] = db.run {
+    user.filter(_.email === user_email).exists.result
+  }
+
+  def getByEmail(email: String): Future[Seq[MyUser]] = db.run {
+    user.filter(_.email === email).result
+  }
+
+  def getByEmailAndPassword(user_email: String, user_password: String): Future[Seq[MyUser]] = db.run {
+    user.filter(user => (user.email === user_email) && (user.password === user_password)).result
+  }
+
 }

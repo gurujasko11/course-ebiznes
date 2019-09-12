@@ -9,8 +9,8 @@ import slick.jdbc.JdbcProfile
 import scala.concurrent.{ ExecutionContext, Future }
 
 case class Address(
-  address_id: Long,
-  user_id: Long,
+  address_id: Int,
+  user_id: Int,
   country: String,
   city: String,
   street: String,
@@ -32,8 +32,8 @@ class AddressRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
   import profile.api._
 
   class AddressTable(tag: Tag) extends Table[Address](tag, "addresses") {
-    def address_id = column[Long]("address_id", O.PrimaryKey, O.AutoInc)
-    def user_id = column[Long]("user_id")
+    def address_id = column[Int]("address_id", O.PrimaryKey, O.AutoInc)
+    def user_id = column[Int]("user_id")
     def country = column[String]("country")
     def city = column[String]("city")
     def street = column[String]("street")
@@ -46,7 +46,7 @@ class AddressRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
 
   val address = TableQuery[AddressTable]
 
-  def create(user_id: Long, country: String, city: String, street: String, home_number: Int, apartament_number: scala.Option[Int], postal_code: String): Future[Address] = db.run {
+  def create(user_id: Int, country: String, city: String, street: String, home_number: Int, apartament_number: scala.Option[Int], postal_code: String): Future[Address] = db.run {
     (address.map(a => (a.user_id, a.country, a.city, a.street, a.home_number, a.apartament_number, a.postal_code))
       returning address.map(_.address_id)
       into {
@@ -60,11 +60,11 @@ class AddressRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
     address.result
   }
 
-  def delete(id: Long): Future[Unit] = db.run {
+  def delete(id: Int): Future[Unit] = db.run {
     (address.filter(_.address_id === id).delete).map(_ => ())
   }
 
-  def findById(id: Long): Future[scala.Option[Address]] = db.run {
+  def findById(id: Int): Future[scala.Option[Address]] = db.run {
     address.filter(_.address_id === id).result.headOption
   }
 

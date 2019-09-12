@@ -8,13 +8,13 @@ import slick.jdbc.JdbcProfile
 import scala.concurrent.{ ExecutionContext, Future }
 
 case class Product(
-  product_id: Long,
-  category_id: Long,
+  product_id: Int,
+  category_id: Int,
   name: String,
   description: String,
   country_of_origin: String,
   weight: Int,
-  price: Double
+  price: Int
 )
 
 object Product {
@@ -30,20 +30,20 @@ class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
   import profile.api._
 
   class ProductTable(tag: Tag) extends Table[Product](tag, "products") {
-    def product_id = column[Long]("product_id", O.PrimaryKey, O.AutoInc)
-    def category_id = column[Long]("category_id")
+    def product_id = column[Int]("product_id", O.PrimaryKey, O.AutoInc)
+    def category_id = column[Int]("category_id")
     def name = column[String]("name")
     def description = column[String]("description")
     def country_of_origin = column[String]("country_of_origin")
     def weight = column[Int]("weight")
-    def price = column[Double]("price")
+    def price = column[Int]("price")
 
     def * = (product_id, category_id, name, description, country_of_origin, weight, price) <> ((Product.apply _).tupled, Product.unapply)
   }
 
   val product = TableQuery[ProductTable]
 
-  def create(category_id: Long, name: String, description: String, country_of_origin: String, weight: Int, price: Double): Future[Product] = db.run {
+  def create(category_id: Int, name: String, description: String, country_of_origin: String, weight: Int, price: Int): Future[Product] = db.run {
     (product.map(p => (p.category_id, p.name, p.description, p.country_of_origin, p.weight, p.price))
       returning product.map(_.product_id)
       into {
@@ -53,15 +53,22 @@ class ProductRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(imp
     ) += ((category_id, name, description, country_of_origin, weight, price))
   }
 
+  def update(product_id: Int, category_id: Int, name: String, description: String, country_of_origin: String, weight: Int, price: Int): Future[Int] = {
+    val q = product.filter(_.product_id === product_id)
+      .map(x => (x.category_id, x.name, x.description, x.country_of_origin, x.weight, x.price))
+      .update((category_id, name, description, country_of_origin, weight, price))
+    db.run(q)
+  }
+
   def list(): Future[Seq[Product]] = db.run {
     product.result
   }
 
-  def delete(id: Long): Future[Unit] = db.run {
+  def delete(id: Int): Future[Unit] = db.run {
     (product.filter(_.product_id === id).delete).map(_ => ())
   }
 
-  def findById(id: Long): Future[scala.Option[Product]] = db.run {
-    product.filter(_.product_id === id).result.headOption
+  def findById(id: Int): Future[Seq[Product]] = db.run {
+    product.filter(_.product_id === id).result
   }
 }

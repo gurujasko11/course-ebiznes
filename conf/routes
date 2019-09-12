@@ -5,6 +5,7 @@
 # Home page
 GET         /                                controllers.ApplicationController.index
 GET         /signOut                         controllers.ApplicationController.signOut
+GET         /auth/signOut                    controllers.SocialAuthController.signOut
 GET         /authenticate/:provider          controllers.SocialAuthController.authenticate(provider)
 
 GET         /signUp                          controllers.SignUpController.view
@@ -28,39 +29,50 @@ GET         /assets/*file                    controllers.Assets.versioned(file)
 ->          /webjars                         webjars.Routes
 
 GET           /addresses                   controllers.AddressController.get_addresses
-GET           /address/:id                 controllers.AddressController.get_address(id: Long)
+GET           /address/:id                 controllers.AddressController.get_address(id: Int)
 POST          /address                     controllers.AddressController.add_address
-PUT           /address/:id                 controllers.AddressController.edit_address(id: Long)
-DELETE        /address/:id                 controllers.AddressController.delete_address(id: Long)
+PUT           /address/:id                 controllers.AddressController.edit_address(id: Int)
+DELETE        /address/:id                 controllers.AddressController.delete_address(id: Int)
 
 GET           /users                       controllers.MyUserController.get_users
-GET           /user/:id                    controllers.MyUserController.get_user(id: Long)
+GET           /user/:id                    controllers.MyUserController.get_user(id: Int)
 POST          /user                        controllers.MyUserController.add_user
-PUT           /user/:id                    controllers.MyUserController.edit_user(id: Long)
-DELETE        /user/:id                    controllers.MyUserController.delete_user(id: Long)
+PUT           /user/:id                    controllers.MyUserController.edit_user(id: Int)
+DELETE        /user/:id                    controllers.MyUserController.delete_user(id: Int)
 
 GET           /products                    controllers.ProductController.get_products
-GET           /product/:id                 controllers.ProductController.get_product(id: Long)
+GET           /product/:id                 controllers.ProductController.get_product(id: Int)
 POST          /product                     controllers.ProductController.add_product
-PUT           /product/:id                 controllers.ProductController.edit_product(id: Long)
-DELETE        /product/:id                 controllers.ProductController.delete_product(id: Long)
+DELETE        /api/deleteProduct/:id       controllers.ProductController.delete_product(id: Int)
 
-GET           /categories                  controllers.CategoryController.get_categories
-GET           /category/:id                controllers.CategoryController.get_category_by_id(id: Long)
+GET           /api/getCategories           controllers.CategoryController.get_categories
+GET           /category/:id                controllers.CategoryController.get_category_by_id(id: Int)
 POST          /category                    controllers.CategoryController.create
-PUT           /category/:id                controllers.CategoryController.edit_category(id: Long)
-DELETE        /category/:id                controllers.CategoryController.delete(id: Long)
+PUT           /api/updateCategory/:id      controllers.CategoryController.edit_category(id: Int)
+DELETE        /api/deleteCategory/:id      controllers.CategoryController.delete(id: Int)
 
 GET           /orders                      controllers.OrderController.get_orders
-GET           /order/:id                   controllers.OrderController.get_order(id: Long)
+GET           /order/:id                   controllers.OrderController.get_order(id: Int)
 POST          /order                       controllers.OrderController.add_order
-PUT           /order/:id                   controllers.OrderController.edit_order(id: Long)
-DELETE        /order/:id                   controllers.OrderController.delete_order(id: Long)
+PUT           /order/:id                   controllers.OrderController.edit_order(id: Int)
+DELETE        /order/:id                   controllers.OrderController.delete_order(id: Int)
 
 GET           /order_elements              controllers.OrderElementController.get_order_elements
-GET           /order_element/:id           controllers.OrderElementController.get_order_element(id: Long)
+GET           /order_element/:id           controllers.OrderElementController.get_order_element(id: Int)
 POST          /order_element               controllers.OrderElementController.add_order_element
-PUT           /order_element/:id           controllers.OrderElementController.edit_order_element(id: Long)
-DELETE        /order_element/:id           controllers.OrderElementController.delete_order_element(id: Long)
+PUT           /order_element/:id           controllers.OrderElementController.edit_order_element(id: Int)
+DELETE        /order_element/:id           controllers.OrderElementController.delete_order_element(id: Int)
 
-GET           /isLogged                    controllers.ApplicationController.isLogged
+GET           /api/getProducts             controllers.ProductController.get_products
+GET           /api/getProduct/:id          controllers.ProductController.get_product(id: Int)
+POST          /api/addProducts             controllers.ProductController.add_product
+PUT           /api/updateProduct/:id       controllers.ProductController.update_product(id: Int)
+
+#GET           /auth/signOut                controllers.SocialAuthController.signOut
+GET           /auth/getUser                controllers.SocialAuthController.getLoggedInEmail
+GET           /auth/getUsers               controllers.UsersController.getUsers
+#PUT           /auth/updateUser/:id         controllers.UsersController.updateUser(id:Long)
+DELETE        /auth/deleteUser/:id         controllers.UsersController.deleteUser(id:Int)
+
+POST          /register                    controllers.UsersController.register
+POST          /login                       controllers.UsersController.login

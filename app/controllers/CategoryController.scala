@@ -20,11 +20,12 @@ class CategoryController @Inject() (categoryRepo: CategoryRepository, cc: Messag
 
   def get_categories = Action.async { implicit request =>
     categoryRepo.list().map { category =>
-      Ok(Json.toJson(category))
+      Ok(Json.toJson(category)).withHeaders(
+        "Access-Control-Allow-Origin" -> "*")
     }
   }
 
-  def get_category_by_id(id: Long) = Action.async { implicit request =>
+  def get_category_by_id(id: Int) = Action.async { implicit request =>
     val options = for {
       maybeCategory <- categoryRepo.findById(id)
     } yield (maybeCategory)
@@ -48,17 +49,19 @@ class CategoryController @Inject() (categoryRepo: CategoryRepository, cc: Messag
         categoryRepo.create(
           category.name: String
         ).map { _ =>
-            Ok("succesfully added new category")
+            Ok("succesfully added new category").withHeaders(
+              "Access-Control-Allow-Origin" -> "*")
           }
       }
     )
   }
 
-  def delete(id: Long) = Action {
+  def delete(id: Int) = Action {
     categoryRepo.delete(id)
-    Ok("Successfully removed")
+    Ok("Successfully removed").withHeaders(
+      "Access-Control-Allow-Origin" -> "*")
   }
-  def edit_category(id: Long) =
+  def edit_category(id: Int) =
     Action.async(parse.json) {
       implicit request =>
         categoryForm.bindFromRequest.fold(

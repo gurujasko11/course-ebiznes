@@ -17,7 +17,7 @@ class OrderController @Inject() (orderRepository: OrderRepository, cc: Controlle
 
   val orderForm: Form[CreateOrderForm] = Form {
     mapping(
-      "address_id" -> of(longFormat),
+      "address_id" -> number,
       "order_date" -> nonEmptyText,
       "realisation_date" -> nonEmptyText
     )(CreateOrderForm.apply)(CreateOrderForm.unapply)
@@ -39,7 +39,7 @@ class OrderController @Inject() (orderRepository: OrderRepository, cc: Controlle
       }
     )
   }
-  def get_order(id: Long) = Action.async { implicit request =>
+  def get_order(id: Int) = Action.async { implicit request =>
     val options = for {
       maybeOrder <- orderRepository.findById(id)
     } yield (maybeOrder)
@@ -61,7 +61,7 @@ class OrderController @Inject() (orderRepository: OrderRepository, cc: Controlle
     }
   }
 
-  def edit_order(id: Long) =
+  def edit_order(id: Int) =
     Action.async(parse.json) {
       implicit request =>
         orderForm.bindFromRequest.fold(
@@ -81,7 +81,7 @@ class OrderController @Inject() (orderRepository: OrderRepository, cc: Controlle
         )
     }
 
-  def delete_order(id: Long) = Action.async(
+  def delete_order(id: Int) = Action.async(
     orderRepository.delete(id).map(_ => Ok(""))
   )
 
@@ -93,4 +93,4 @@ class OrderController @Inject() (orderRepository: OrderRepository, cc: Controlle
   def shipping(id: String) = Action { Ok("shipping") }
 
 }
-case class CreateOrderForm(address_id: Long, order_date: String, realisation_date: String)
+case class CreateOrderForm(address_id: Int, order_date: String, realisation_date: String)

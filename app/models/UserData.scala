@@ -64,5 +64,4 @@ class UserDataRepository @Inject() (protected val dbConfigProvider: DatabaseConf
   def getByProvider(provider: String, user_key: String): Future[scala.Option[UserData]] = {
     dbConfig.db.run(externalUserDataRepository.filter(_.provider === provider).filter(_.user_key === user_key).result.headOption)
   }
-
 }

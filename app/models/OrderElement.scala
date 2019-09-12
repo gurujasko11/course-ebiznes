@@ -8,9 +8,9 @@ import slick.jdbc.JdbcProfile
 import scala.concurrent.{ ExecutionContext, Future }
 
 case class OrderElement(
-  order_element_id: Long,
-  order_id: Long,
-  product_id: Long,
+  order_element_id: Int,
+  order_id: Int,
+  product_id: Int,
   quantity: Int,
   price: Double
 )
@@ -28,9 +28,9 @@ class OrderElementRepository @Inject() (dbConfigProvider: DatabaseConfigProvider
   import profile.api._
 
   class OrderElementTable(tag: Tag) extends Table[OrderElement](tag, "orders_elements") {
-    def order_element_id = column[Long]("order_element_id", O.PrimaryKey, O.AutoInc)
-    def order_id = column[Long]("order_id")
-    def product_id = column[Long]("product_id")
+    def order_element_id = column[Int]("order_element_id", O.PrimaryKey, O.AutoInc)
+    def order_id = column[Int]("order_id")
+    def product_id = column[Int]("product_id")
     def quantity = column[Int]("quantity")
     def price = column[Double]("price")
 
@@ -39,7 +39,7 @@ class OrderElementRepository @Inject() (dbConfigProvider: DatabaseConfigProvider
 
   val orderElement = TableQuery[OrderElementTable]
 
-  def create(order_id: Long, product_id: Long, quantity: Int, price: Double): Future[OrderElement] = db.run {
+  def create(order_id: Int, product_id: Int, quantity: Int, price: Double): Future[OrderElement] = db.run {
     (orderElement.map(o => (o.order_id, o.product_id, o.quantity, o.price))
       returning orderElement.map(_.order_element_id)
       into {
@@ -54,11 +54,11 @@ class OrderElementRepository @Inject() (dbConfigProvider: DatabaseConfigProvider
     orderElement.result
   }
 
-  def delete(id: Long): Future[Unit] = db.run {
+  def delete(id: Int): Future[Unit] = db.run {
     (orderElement.filter(_.order_element_id === id).delete).map(_ => ())
   }
 
-  def findById(id: Long): Future[scala.Option[OrderElement]] = db.run {
+  def findById(id: Int): Future[scala.Option[OrderElement]] = db.run {
     orderElement.filter(_.order_element_id === id).result.headOption
   }
 }

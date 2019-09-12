@@ -49,7 +49,7 @@ class MyUserController @Inject() (userRepository: MyUserRepository, cc: Controll
     )
   }
 
-  def get_user(id: Long) = Action.async { implicit request =>
+  def get_user(id: Int) = Action.async { implicit request =>
     val options = for {
       maybeUser <- userRepository.findById(id)
     } yield (maybeUser)
@@ -71,26 +71,13 @@ class MyUserController @Inject() (userRepository: MyUserRepository, cc: Controll
     }
   }
 
-  def delete_user(id: Long) = Action.async(
+  def delete_user(id: Int) = Action.async(
     userRepository.delete(id).map(_ => Ok(""))
   )
 
-  def edit_user(id: Long) = Action {
+  def edit_user(id: Int) = Action {
     Ok("edit user")
   }
-
-  //  def auth_request(code: Option[String]) = Action {
-  //    Ok("the code is:" + code)
-  //    val url = "www.googleapis.com/oauth2/v4/token HTTP/1.1";
-  //
-  ////    val request: HttpRequest =
-  //    Http("www.googleapis.com/oauth2/v4/token HTTP/1.1")
-  //      .postForm(Seq(
-  //        "code" -> "4/P7q7W91a-oMsCeLvIaQm6bTrgtp7",
-  ////        "client_id" -> code,
-  ////        "client_id" -> code,
-  //        "redirect_uri" -> "https://localhost:9000/auth_cfm")).asString
-  //  }
 
 }
 

@@ -9,7 +9,7 @@
 		extra-sbtVersion="1.0"
 		conf="compile"
 		confs="compile, runtime, test, provided, optional, compile-internal, runtime-internal, test-internal, plugin, pom, scala-tool"
-		date="20190903093641"/>
+		date="20190910232237"/>
 	<dependencies>
 		<module organisation="org.scalariform" name="sbt-scalariform">
 			<revision name="1.8.2" status="release" pubdate="20171028162515" resolver="sbt-chain" artresolver="sbt-chain" homepage="https://github.com/sbt/sbt-scalariform" extra-scalaVersion="2.12" extra-sbtVersion="1.0" downloaded="false" searched="false" default="false" conf="default, compile, runtime, default(compile), master" position="44">

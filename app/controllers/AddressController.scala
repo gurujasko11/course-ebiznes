@@ -17,7 +17,7 @@ class AddressController @Inject() (addressRepository: AddressRepository, cc: Con
 
   val addressForm: Form[CreateAddressForm] = Form {
     mapping(
-      "user_id" -> of(longFormat),
+      "user_id" -> number,
       "country" -> nonEmptyText,
       "city" -> nonEmptyText,
       "street" -> nonEmptyText,
@@ -48,7 +48,7 @@ class AddressController @Inject() (addressRepository: AddressRepository, cc: Con
     )
   }
 
-  def get_address(id: Long) = Action.async { implicit request =>
+  def get_address(id: Int) = Action.async { implicit request =>
     val options = for {
       maybeAddress <- addressRepository.findById(id)
     } yield (maybeAddress)
@@ -70,11 +70,11 @@ class AddressController @Inject() (addressRepository: AddressRepository, cc: Con
     }
   }
 
-  def delete_address(id: Long) = Action.async(
+  def delete_address(id: Int) = Action.async(
     addressRepository.delete(id).map(_ => Ok(""))
   )
 
-  def edit_address(id: Long) =
+  def edit_address(id: Int) =
     Action.async(parse.json) {
       implicit request =>
         addressForm.bindFromRequest.fold(
@@ -99,4 +99,4 @@ class AddressController @Inject() (addressRepository: AddressRepository, cc: Con
     }
 
 }
-case class CreateAddressForm(user_id: Long, country: String, city: String, street: String, home_number: Int, apartament_number: Option[Int], postal_code: String)
+case class CreateAddressForm(user_id: Int, country: String, city: String, street: String, home_number: Int, apartament_number: Option[Int], postal_code: String)

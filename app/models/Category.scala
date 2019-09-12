@@ -8,7 +8,7 @@ import slick.jdbc.JdbcProfile
 import scala.concurrent.{ ExecutionContext, Future }
 
 case class Category(
-  category_id: Long,
+  category_id: Int,
   name: String)
 
 object Category {
@@ -23,7 +23,7 @@ class CategoryRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(im
   import profile.api._
 
   class CategoryTable(tag: Tag) extends Table[Category](tag, "categories") {
-    def category_id = column[Long]("category_id", O.PrimaryKey, O.AutoInc)
+    def category_id = column[Int]("category_id", O.PrimaryKey, O.AutoInc)
     def name = column[String]("category_name")
     def * = (category_id, name) <> ((Category.apply _).tupled, Category.unapply)
   }
@@ -41,15 +41,16 @@ class CategoryRepository @Inject() (dbConfigProvider: DatabaseConfigProvider)(im
     category.result
   }
 
-  def delete(id: Long): Future[Unit] = db.run {
+  def delete(id: Int): Future[Unit] = db.run {
     (category.filter(_.category_id === id).delete).map(_ => ())
   }
 
-  def findById(id: Long): Future[scala.Option[Category]] = db.run {
+  def findById(id: Int): Future[scala.Option[Category]] = db.run {
     category.filter(_.category_id === id).result.headOption
   }
 
   def update(newValue: Category) = db.run {
+    println("edit category: " + newValue.name)
     category.insertOrUpdate(newValue)
   }
 
